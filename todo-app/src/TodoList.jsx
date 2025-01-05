@@ -2,27 +2,27 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 export default function TodoList() {
-    const [todos, setTodos] = useState([]); // Initialize as an empty array
+    const [todos, setTodos] = useState([]);
     const [newTodo, setNewTodo] = useState('');
 
-    // Fetch all tasks from the database when the component loads
+    // Fetch all tasks
     useEffect(() => {
         axios.get('http://localhost:3001/todos')
             .then(response => {
                 console.log('Fetched Todos:', response.data);
-                setTodos(response.data); // Set the fetched tasks
+                setTodos(response.data); 
             })
             .catch(err => console.error('Error fetching todos:', err));
     }, []);
 
-    // Add a new task to the database
+    // Add a new task
     const addNewTask = () => {
-        if (!newTodo.trim()) return; // Prevent adding empty tasks
+        if (!newTodo.trim()) return; 
         axios.post('http://localhost:3001/add', { task: newTodo, isDone: false })
             .then(result => {
                 console.log('Task Added:', result.data);
-                setTodos(prevTodos => [...prevTodos, result.data]); // Add new task to the list
-                setNewTodo(''); // Clear input field
+                setTodos(prevTodos => [...prevTodos, result.data]); 
+                setNewTodo(''); 
             })
             .catch(err => console.error('Error adding task:', err));
     };
@@ -46,6 +46,7 @@ export default function TodoList() {
                 setTodos(prevTodos =>
                     prevTodos.map(todo =>
                         todo._id === id ? { ...todo, isDone: !todo.isDone } : todo
+                        // console.log(todo)
                     )
                 );
             })
@@ -65,10 +66,10 @@ export default function TodoList() {
     };
 
     const completedAll = () => {
-        axios.put('http://localhost:3001/updateAll', { isDone: true }) // Set `isDone` to true
+        axios.put('http://localhost:3001/updateAll', { isDone: true }) 
             .then(() => {
                 setTodos(prevTodos =>
-                    prevTodos.map(todo => ({ ...todo, isDone: true })) // Update all items in the local state
+                    prevTodos.map(todo => ({ ...todo, isDone: true })) 
                 );
             })
             .catch(err => console.error('Error marking all as read:', err));
@@ -77,7 +78,7 @@ export default function TodoList() {
     const deleteAll = () => {
         axios.delete('http://localhost:3001/deleteAll')
             .then(() => {
-                setTodos([]); // Clear all tasks from the local state
+                setTodos([]); 
             })
             .catch(err => console.error('Error deleting all tasks:', err));
     };
