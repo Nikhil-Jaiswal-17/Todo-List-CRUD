@@ -10,28 +10,28 @@ app.use(express.json());
 // Connect to MongoDB
 mongoose.connect("mongodb://localhost:27017/test");
 
-// POST route to add a single task
+// Add a single task
 app.post('/add', (req, res) => {
-    const { task, isDone } = req.body; // Accept task and isDone properties
-    TodoModel.create({ task, isDone }) // Save as an individual document
-        .then(result => res.json(result)) // Return the saved document
+    const { task, isDone } = req.body; 
+    TodoModel.create({ task, isDone }) 
+        .then(result => res.json(result)) 
         .catch(err => {
             console.error('Error saving todo:', err);
             res.status(500).json({ error: 'Failed to save todo.' });
         });
 });
 
-// GET route to fetch all tasks
+// Fetch all tasks
 app.get('/todos', (req, res) => {
-    TodoModel.find() // Fetch all tasks from the database
-        .then(todos => res.json(todos)) // Return the tasks
+    TodoModel.find() 
+        .then(todos => res.json(todos))
         .catch(err => {
             console.error('Error fetching todos:', err);
             res.status(500).json({ error: 'Failed to fetch todos.' });
         });
 });
 
-// DELETE route to delete a task
+// Delete a task
 app.delete('/delete/:id', (req, res) => {
     TodoModel.findByIdAndDelete(req.params.id)
         .then(() => res.json({ success: true }))
@@ -41,7 +41,7 @@ app.delete('/delete/:id', (req, res) => {
         });
 });
 
-// PUT route to update a task
+// Update a task
 app.put('/update/:id', (req, res) => {
     const { isDone } = req.body;
     TodoModel.findByIdAndUpdate(req.params.id, { isDone }, { new: true })
@@ -52,10 +52,10 @@ app.put('/update/:id', (req, res) => {
         });
 });
 
-// PUT route to mark all tasks as read (completed)
+// Mark all tasks as read (completed)
 app.put('/updateAll', (req, res) => {
-    const { isDone } = req.body; // Receive the isDone status from the frontend
-    TodoModel.updateMany({}, { isDone }) // Update all tasks in the collection
+    const { isDone } = req.body; 
+    TodoModel.updateMany({}, { isDone }) 
         .then(() => res.json({ success: true, message: 'All tasks updated successfully' }))
         .catch(err => {
             console.error('Error updating tasks:', err);
@@ -63,7 +63,7 @@ app.put('/updateAll', (req, res) => {
         });
 });
 
-// DELETE route to delete all tasks
+// Delete all tasks
 app.delete('/deleteAll', (req, res) => {
     TodoModel.deleteMany({})
         .then(() => res.json({ success: true, message: 'All tasks deleted successfully' }))
